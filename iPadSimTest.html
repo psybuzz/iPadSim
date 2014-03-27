@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>iSASA 2014</title>
+	<meta name="description" content="iPad Simulator for iSASA 2014, Loyola University Chicago's South Asian Student Association's annual show">
+	<meta name="author" content="Erik Luo">
+	<meta charset="UTF-8">
+	<!--<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>-->
+	<script src="jquery.min.js"></script>
+	<script src="https://www.youtube.com/iframe_api" type="text/javascript"></script>
+	<!--<script src="bootstrap/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="bootstrap/bootstrap.min.css">-->
+
+	<!--
+	Supported browsers:
+		Chrome 12+
+		Firefox 16+
+		IE 10+
+		Safari
+	-->
+
+	<style>
+		html{
+			height: 100%;
+		}
+		body{
+		    background-repeat: no-repeat;
+		    background-attachment: fixed;
+			background: #1e5799; /* Old browsers */
+			background: -moz-linear-gradient(top, #1e5799 0%, #d3d3d3 90%, #00FFC2 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(90%,#00B98E), color-stop(100%,#cce5df)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top, #1e5799 0%,#d3d3d3 81%,#00B98E 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top, #1e5799 0%,#d3d3d3 90%,#00FFC2 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top, #1e5799 0%,#d3d3d3 90%,#00FFC2 100%); /* IE10+ */
+
+			margin: 0px;
+			color: white;
+			font-weight: lighter;
+			font-family: Helvetica;
+			font-size: 14px;
+
+			max-height: 100%;
+			overflow: hidden;
+		}
+
+		.animated{
+
+			-webkit-transition: -webkit-transform .55s;
+	         -moz-transition: -moz-transform .55s;
+	           -o-transition: -o-transform .55s;
+	              transition: transform .55s;
+			-webkit-transform-style: preserve-3d;
+			 -moz-transform-style: preserve-3d;
+			   -o-transform-style: preserve-3d;
+			      transform-style: preserve-3d;
+
+			-webkit-transform: translateZ(0px);
+		}
+		#dock{
+			position: fixed;
+			bottom: 0px;
+			width: 100%;
+			height: 10px;
+			background-color:rgba(230,230,230,0.5);
+			z-index: -1;
+			padding: 10px 5% 30px 5%;
+			table-layout: fixed;
+		}
+
+		#topContainer{
+			padding: 5px 10px;
+			margin-bottom: 2%;
+		}
+		#topBar{
+			width: 100%;
+			text-align: center;
+		}
+		#topBar:after{
+			clear: both;
+		}
+		.left{
+			float:left;
+		}
+		.center{
+			text-align: center;
+		}
+		.right{
+			float:right;
+		}
+		#time{
+			left: 18px;
+			position: relative;
+		}
+
+		#appsContainer{
+			position: relative;
+			margin: 0 auto;
+			max-width: 90%;
+			-webkit-perspective: 800px;
+	        -moz-perspective: 800px;
+	        -o-perspective: 800px;
+	        perspective: 800px;
+	        
+	        -webkit-perspective-origin: center bottom;
+			-moz-perspective-origin: center bottom;
+			-o-perspective-origin: center bottom;
+			perspective-origin: center bottom;
+		}
+		#appsWindow{
+			width: 100%;
+			/*min-width: 50%;*/
+			position: absolute;
+		}
+		.appContainer{
+			text-align: center;
+			width: 80px;
+		}
+		#appsWindow > tbody > tr > .appContainer{
+			padding-bottom: 5%;
+		}
+		.appBox{
+			background-color: white;
+			border-radius: 10px;
+			width: 80px;
+			height: 70px;
+			margin: 0px auto 5px auto;
+			overflow: hidden;
+		}
+		.appLabel{
+			text-shadow: 2px 2px 25px rgb(50,50,50);
+		}
+
+		#vidContainer{
+			/*margin: 0 auto;*/
+			width: 100%;
+			height: 100%;
+			background-color: black;
+			display: none;
+			position: absolute;
+			top: 0px;
+			padding-top: 5%;
+		}
+		#player{
+			width: 80%;
+			height: 80%;
+			left: 10%;
+			position: relative;
+		}
+		#closeVideo{
+			position: absolute;
+			right: 50px;
+			font-family: Arial;
+			font-weight: lighter;
+			font-size: 40px;
+			z-index: 2;
+			border-radius: 100%;
+
+			width: 30px;
+			height: 35px;
+			text-align: center;
+			padding: 0px 5px 5px 5px;
+			color: gray;
+			text-decoration: none;
+		}
+		#closeVideo:hover{
+			color: white;
+		}
+		#cover{
+			position: fixed;
+			background-color: black;
+			width: 80px;
+			height: 70px;
+			top: 100%;
+		}
+
+		img{
+			width: 80px;
+			height: 70px;
+			border-radius: 10px;
+			position: relative;
+		}
+		.squeeze1{
+			width: 84px;
+			height: 74px;
+			top: -2.5px;
+			left: -2px;
+		}
+		.squeeze2{
+			width: 88px;
+			height: 78px;
+			top: -4px;
+			left: -4px;
+		}
+		.squeeze3{
+			width: 92px;
+			height: 82px;
+			top: -6px;
+			left: -6px;
+		}
+		.squeeze4{
+			width: 90px;
+			height: 94px;
+			top: -3px;
+			left: -5px;	
+		}
+		.squeeze5{
+			width: 210px;
+			height: 110px;
+			top: -20px;
+			left: -65px;
+		}
+		#batt{
+			width: 25px;
+			height: 8px;
+			background-color: lightgreen;
+			border: 1px solid lightgray;
+			opacity: 0.8;
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<div id="topContainer">
+		<div id="topBar">
+			<span class="left">iPad</span>
+			<span class="right">100% <div id="batt"></div></span>
+		</div>
+		<div class='center' id='time'></div>
+	</div>
+
+	<div id="appsContainer">
+		<table id="appsWindow" class="animated">
+			<!--(tr>(td.appContainer>div.appBox+span.appLabel)*4)*4-->
+			<tr>
+				<td class="appContainer" id="11">
+					<div class="appBox">
+						<img src="images/iSASA.png" />
+					</div>
+					<span class="appLabel">iSASA</span>
+				</td>
+				<td class="appContainer" id="12">
+					<div class="appBox">
+						<img src="images/twitter7.png" class="squeeze1" />
+					</div>
+					<span class="appLabel">Twitter</span>
+				</td>
+				<td class="appContainer" id="13">
+					<div class="appBox">
+						<img src="images/groupme.png" />
+					</div>
+					<span class="appLabel">Groupme</span>
+				</td>
+				<td class="appContainer" id="14">
+					<div class="appBox">
+						<img src="images/angry_baa.png" class="squeeze3" />
+					</div>
+					<span class="appLabel">Angry Baa</span>
+				</td>
+				<td class="appContainer" id="15">
+					<div class="appBox">
+						<img src="images/facetime.jpg" class="squeeze3" />
+					</div>
+					<span class="appLabel">Facetime</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="appContainer" id="21">
+					<div class="appBox">
+						<img src="images/pandora.png" class="squeeze1" />
+					</div>
+					<span class="appLabel">Pandora</span>
+				</td>
+				<td class="appContainer" id="22">
+					<div class="appBox">
+						<img src="images/siri.png" />
+					</div>
+					<span class="appLabel">Siri</span>
+				</td>
+				<td class="appContainer" id="23">
+					<div class="appBox">
+						<img src="images/snapchat.png" class="squeeze3" />
+					</div>
+					<span class="appLabel">Snapchat</span>
+				</td>
+				<td class="appContainer" id="24">
+					<div class="appBox">
+						<img src="images/shaadi_run.png" class="squeeze1" />
+					</div>
+					<span class="appLabel">Shaadi Run</span>
+				</td>
+				<td class="appContainer" id="25">
+					<div class="appBox">
+						<img src="images/netflix.gif" class="squeeze1" />
+					</div>
+					<span class="appLabel">Netflix</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="appContainer" id="31">
+					<div class="appBox">
+						<img src="images/alarm_clock7.jpg" class="squeeze2" />
+					</div>
+					<span class="appLabel">Alarm Clock</span>
+				</td>
+				<td class="appContainer" id="32">
+					<div class="appBox">
+						<img src="images/facebook7.png" class="squeeze3" />
+					</div>
+					<span class="appLabel">Facebook</span>
+				</td>
+				<td class="appContainer" id="33">
+					<div class="appBox">
+						<img src="images/mail7.png" class="squeeze5" />
+					</div>
+					<span class="appLabel">Mail</span>
+				</td>
+				<td class="appContainer" id="34">
+					<div class="appBox">
+						<img src="images/photos7.png" class="squeeze2" />
+					</div>
+					<span class="appLabel">Photos</span>
+				</td>
+				<td class="appContainer" id="35">
+					<div class="appBox">
+						<img src="images/maps7.png" class="squeeze3" />
+					</div>
+					<span class="appLabel">Maps</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<table id="dock" class="animated">
+		<tr>
+			<td class="appContainer docked">
+				<div class="appBox">
+					<img src="images/dress2impress.png" />
+				</div>
+				<span class="appLabel">Dress 2 Impress</span>
+			</td>
+			<td class="appContainer docked">
+				<div class="appBox">
+					<img src="images/horoscope.png" class="squeeze1" />
+				</div>
+				<span class="appLabel">Horoscope</span>
+			</td>
+			<td class="appContainer docked">
+				<div class="appBox">
+					<img src="images/vine.png"  class="squeeze1"/>
+				</div>
+				<span class="appLabel">Vine</span>
+			</td>
+			<td class="appContainer docked">
+				<div class="appBox">
+					<img src="images/loyola.jpg" />
+				</div>
+				<span class="appLabel">Loyola</span>
+			</td>
+		</tr>
+	</table>
+
+	<div id="vidContainer">
+		<a id="closeVideo" href="#">&times;</a>
+		<!-- <div id="player"></div> -->
+		<iframe id="player" type="text/html" width="640" height="390"
+	  src="https://www.youtube.com/embed/8vb-bnRxllI?enablejsapi=1&autohide=1&playerapiid=player"
+	  frameborder="0"></iframe>
+	</div>
+	<div id="cover"></div>
+	
+	<script type="text/javascript">
+		//UI Setup
+		var appsWindow = document.getElementById('appsWindow');
+		var topBar = document.getElementById('topContainer');
+		var vidContainer = document.getElementById('vidContainer');
+		var dock = document.getElementById('dock');
+		var cover = document.getElementById('cover');
+		$('#player').hide();
+
+
+		var videoTable = {
+			"Vine": "MXZIPY4sJkw",
+			"Facetime": "ZnfPI2T76Hw",
+			"Twitter": "wzU8KII3elg",
+			"Netflix": "g49HX81q84s",
+			"Snapchat": "XQMBZAEubDg",
+			"Pandora": "rCaNbgi0za8",
+			"Angry Baa": "fMUsN-mDQCY",
+			"Groupme": "l0w6iN311X8",
+			"Horoscope": "npoNo1q8BpI",
+			"iSASA": "_XeF4x5_b5g",
+			"Shaadi Run": "kFzwhP4wVi4"
+		};
+		
+		// Youtube Video Loading
+		var player;
+		function onYouTubeIframeAPIReady() {
+			player = new YT.Player('player', {
+			  height: '390',
+			  width: '640',
+			  videoId: '8vb-bnRxllI',
+			  events: {
+			    'onReady': onPlayerReady,
+			    'onStateChange': onPlayerStateChange
+			  }
+			});
+		}
+		function onPlayerReady(event) {
+			if (out){
+				event.target.playVideo();
+			}
+	    }
+		function onPlayerStateChange(event) {
+			// if (event.data == YT.PlayerState.PLAYING && !done) {
+			//   // setTimeout(stopVideo, 6000);
+			//   console.log("video cued")
+			//   done = true;
+			// }
+
+			// auto-close when video ends
+			if (event.data == YT.PlayerState.ENDED){
+				switchVideoMode(false);
+			}
+		}
+		function playVideo () {
+			player.playVideo();
+		}
+		function stopVideo() {
+			player.stopVideo();
+		}
+
+		// random colors
+		// for (var i = $('.appBox').length - 1; i >= 0; i--) {
+		// 	$($('.appBox')[i]).css('background-color', 'rgb('+Math.floor(Math.random()*205+50)+','+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+')')
+		// };
+
+
+		// Time label space
+		(function(){
+			var timeLabel = document.getElementById('time');
+			function updateTimeLabel () {
+				d = (new Date()).toLocaleTimeString().split(' ');
+				t = d[0].split(':');
+				t.pop();
+				newTime = t.join(':') + " " + d[1];
+				timeLabel.innerText = newTime;
+			}
+			setInterval(updateTimeLabel(), 30000);
+		})();
+
+		// Zoom in/out space
+		var out = false;
+		function switchVideoMode (bool, el) {
+			if (bool == true){
+				if (!out){
+
+					// switch to video mode
+					console.log(el)
+					if ($(el.parentNode).hasClass('docked')){
+						appsWindow.style.webkitTransform = "translateZ(850px) translateY(-100px)";
+					} else {
+						offLeft = window.innerWidth*.45 - el.parentNode.offsetLeft - $('#appsWindow').offset().left - 40;
+						offTop = el.parentNode.offsetTop + 40;
+						appsWindow.style.webkitTransform = "translateZ(800px) translateY(-"+(offTop)+"px) translateX("+(offLeft)+"px)";
+					}
+					dock.style.webkitTransform = "translateZ(400px) translateY(150px)";
+					$(topBar).fadeOut(300);
+
+					// load specific video OR go to facebook
+					var appName = el.parentNode.children[1].textContent;
+					if (appName == "Facebook"){
+						$(vidContainer).fadeIn(function(){
+							window.location = "http://facebook.com/";
+						});
+					} else {
+						if (typeof (vidId=videoTable[appName]) != "undefined"){
+							player.loadVideoById(vidId, 0, "hd720");
+						}
+
+						setTimeout(function(){
+							$(vidContainer).fadeIn(function(){
+								$('#player').fadeIn();
+
+							});
+						}, 200);
+					}
+
+				}
+				out = true;
+			} else {
+				if (out){
+					setTimeout(function(){
+						appsWindow.style.webkitTransform = "translateZ(0px)";
+						dock.style.webkitTransform = "translateZ(0px)";
+						$(topBar).fadeIn(200);
+					}, 300);
+					
+					stopVideo();
+					$('#player').hide();
+					$(vidContainer).fadeOut();
+				}
+				out = false;
+			}
+		}
+		$('.appBox').click(function(){ switchVideoMode(true, this) });
+		$('#closeVideo').click(function(){ switchVideoMode(false) });
+		
+		
+	</script>
+</body>
+</html>
